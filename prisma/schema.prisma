@@ -1,0 +1,98 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ArtistType {
+  PUNCHLINE
+  AGRESSIVE
+  PERFORMANCE
+  WORDPLAY
+  DELIVERY
+  FREESTYLE
+  IRONIC
+  STORYTELLING
+}
+
+
+model Battle {
+  id         String   @id @default(cuid())
+  userId     String
+  title      String
+  description String
+  videoUrl   String
+  imageUrl  String
+  votes      Int     @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  votesByUser Vote[]
+  comments Comment[]
+  slug String
+
+
+  artist Artist @relation(fields: [userId], references: [id])
+
+
+}
+
+model Vote {
+  id        String   @id @default(cuid())
+  userId    String
+  battleId  String
+  createdAt DateTime @default(now())
+
+  battle Battle @relation(fields: [battleId], references: [id])
+}
+
+model Artist{
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  nickName  String
+
+  email     String
+  
+  imageUrl  String
+  battles   Battle[]
+
+  battleWon Int     @default(0)
+  rating    Float   @default(0)
+
+  type  ArtistType[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  userId    String
+  battleId  String
+  content   String
+  createdAt DateTime @default(now())
+
+  battle Battle @relation(fields: [battleId], references: [id])
+}
+
+//add event model
+model Event {
+  id        String   @id @default(cuid())
+  title     String
+  description String
+  imageUrl  String
+  startDate DateTime
+  endDate   DateTime
+  location  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

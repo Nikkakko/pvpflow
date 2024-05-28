@@ -51,8 +51,8 @@ const MobileNav: React.FC<MobileNavProps> = () => {
               className="flex items-center py-3"
               onClick={() => setOpen(false)}
             >
-              <span className="mr-2 ">{<item.icon />}</span>
-              <span>{item.title}</span>
+              <span className="mr-2">{<item.icon />}</span>
+              <span className="">{item.title}</span>
             </Link>
           ))}
         </div>
